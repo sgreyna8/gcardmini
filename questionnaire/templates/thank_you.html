@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container" style="margin:100px; ">
+  <div class="container" style="margin-top:50px; padding: 50px;">
+    <h2>Thank you!!!</h2>
+    <p>You can submit another entry again or check the results.</p>
+    <div class="btn-group">
+      <a class="btn btn-primary" href="{% url 'survey_form' %}">Survey Form</a>
+      <a class="btn btn-secondary" href="{% url 'survey_results' %}">Results</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

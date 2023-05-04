@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+	.tab {
+		display: none;
+	}
+</style>
+
+<div class="container" style="margin:100px; ">
+	<div class="container" style="margin-top:50px; padding: 50px;">
+		<form id="regForm" method="POST">
+			{% csrf_token %}
+			{% load widget_tweaks %}
+
+			<h1>Register:</h1>
+
+			<div class="tab" style="margin: 20px;">
+				<h5>What is the name of your store?</h5>
+				<p>Example: Razer Gold, Amazon, Target. (If you have multiple stores, choose your top gift card --
+					you
+					can always add more later.)</p>
+				Name of store: {{ form.store_name|add_class:'form-control' }}<br>
+			</div>
+
+			<div class="tab" style="margin: 20px;">
+				<h5>What is the balance left on your gift card?</h5>
+				<p>Please double check your balance before entering the number here. Example answer: 100 USD, 2,000
+					AUD,
+					200 EUR.</p>
+				<div class="input-group">
+					{{ form.balance|add_class:'form-control' }} {{ form.balance_currency|add_class:'form-select' }}
+				</div>
+
+			</div>
+
+			<div class="tab" style="margin: 20px;">
+				<h5>What price are you selling at?</h5>
+				<p>Please remember a low prices generally results in a faster and more successful sale, and we
+					recommend
+					a substantial discount. This number must be strictly at least ten percent less than the face
+					value
+					of the card, as we only sell discounted gift cards.</p>
+				<div class="input-group">
+					{{ form.price|add_class:'form-control' }} {{ form.price_currency|add_class:'form-select' }}
+				</div>
+			</div>
+
+			<div class="tab" style="margin: 20px;">
+				<h5>Which network would you like to receive funds at?</h5>
+				<p>If you are unsure, please select Polygon.</p>
+				Network: {{ form.network|add_class:'form-select' }}
+			</div>
+
+			<div class="tab" style="margin: 20px;">
+				<h5>What Polygon or Ethereum address would you like to receive funds at?</h5>
+				<p>Example: 0xfA63Ca5caF1D88f42e1A73aE0E0cb7060B9E7292</p>
+				Address: {{ form.address|add_class:'form-control' }}
+			</div>
+
+			<div class="tab" style="margin: 20px;">
+				<h5>Would you prefer to provide a deposit or the card information for validation?</h5>
+				<p>In order to verify your listing, we require either a 10% deposit of the card value in crypto, or
+					full
+					gift card information for verification.</p>
+				Method: {% render_field form.method class='form-select' id='method'%}
+			</div>
+
+			<div class="tab" style="margin: 20px;">
+				<h5>What is the gift card number?</h5>
+				<p>This number is stored securely, and will not be used until you sell your card.</p>
+				Gift Card No.: {% render_field form.gcard_no class='form-control' id='gcard_no' %}
+			</div>
+
+
+
+			<div class="tab" style="margin: 20px;">
+				<h5>If required, what is the gift card's PIN and/or expiration date?</h5>
+				<p>Please put in all additional information needed to redeem the gift card. If nothing is needed,
+					you
+					may leave this blank.</p>
+				Gift Card Pin (optional): {% render_field form.gcard_pin class='form-control' id='gcard_pin' %}
+			</div>
+
+
+			<div class="tab" style="margin: 20px;">
+				<h5>Almost done! What is your email address?</h5>
+				<p>We will only use this to reach out about the transaction. Please check this often as we'll use
+					this
+					as the main way of getting in touch.</p>
+				Email: {{ form.email|add_class:'form-control'}}
+			</div>
+
+			<div style="overflow:auto;">
+				<div style="float:right;">
+					<button class="btn btn-secondary" type="button" id="prevBtn"
+						onclick="nextPrev(-1)">Previous</button>
+					<button class="btn btn-primary" type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	var currentTab = 0;
+	showTab(currentTab);
+
+	function showTab(n) {
+		
+		var x = document.getElementsByClassName("tab");
+		x[n].style.display = "block";
+		
+		if (n == 0) {
+			document.getElementById("prevBtn").style.display = "none";
+		} else {
+			document.getElementById("prevBtn").style.display = "inline";
+		}
+		if (n == (x.length - 1)) {
+			document.getElementById("nextBtn").innerHTML = "Submit";
+		} else {
+			document.getElementById("nextBtn").innerHTML = "Next";
+		}
+	}
+
+	function nextPrev(n) {
+
+		if (currentTab == 5 && document.getElementById('method').value == 'DEP') {
+			if (n == 1) {
+				n = 3;
+			}
+		}
+
+		else if (currentTab == 8 && document.getElementById('method').value == 'DEP') {
+			if (n == -1) {
+				n = -3;
+			}
+		}
+
+		var x = document.getElementsByClassName("tab");
+		x[currentTab].style.display = "none";
+		currentTab = currentTab + n;
+		if (currentTab >= x.length) {
+
+			if (document.getElementById('method').value == 'DEP') {
+				document.getElementById('gcard_no').value = null;
+				document.getElementById('gcard_pin').value = null;
+			}
+
+			document.getElementById("regForm").submit();
+			return false;
+		}
+		
+		showTab(currentTab);
+	}
+
+</script>
+
+{% endblock %}

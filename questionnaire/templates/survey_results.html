@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    td {
+        max-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
+
+<div class="container" style="margin-top:50px; padding: 50px;">
+    <h2>Results</h2>
+
+    <a class="btn btn-primary" href="{% url 'survey_form' %}">Add New</a>
+
+    <table class="table">
+        <thead>
+            <th scope="col">#</th>
+            <th scope="col">Store</th>
+            <th scope="col">Balance</th>
+            <th scope="col">Price</th>
+            <th scope="col">Network</th>
+            <th scope="col">Address</th>
+            <th scope="col">Method</th>
+            <th scope="col">GCard No.</th>
+            <th scope="col">Email</th>
+        </thead>
+        <tbody>
+            {% for survey in surveys %}
+            <tr>
+                <th scope="row">{{ survey.id }}</th>
+                <td>{{ survey.store_name }}</td>
+                <td>{{ survey.balance }} {{ survey.balance_currency }}</td>
+                <td>{{ survey.price }} {{ survey.price_currency }}</td>
+                <td>{{ survey.network }}</td>
+                <td>{{ survey.address }}</td>
+                <td>{{ survey.method }}</td>
+                <td>{{ survey.gcard_no }}</td>
+                <td>{{ survey.email }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</div>
+
+{% endblock %}
